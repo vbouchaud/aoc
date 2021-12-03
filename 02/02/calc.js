@@ -1,18 +1,4 @@
-#!/usr/bin/env node
-
-const readline = require('readline');
-const fs = require('fs');
-
-const { compose, reduce, split } = require('ramda');
-
-const readInterface = readline.createInterface({
-  input: fs.createReadStream('input.txt'),
-});
-
-const commands = [];
-readInterface.on('line', line => {
-  commands.push(line);
-});
+const { reduce, split } = require('ramda');
 
 const calc = ({x, depth, aim}, command) => {
   let [ cmd, value ] = split(' ', command);
@@ -30,9 +16,8 @@ const calc = ({x, depth, aim}, command) => {
   return {x, depth, aim};
 };
 
-readInterface.on('close', () => {
-  const res = reduce(calc, {x: 0, depth: 0, aim: 0}, commands);
+module.exports = (input) => {
+  const res = reduce(calc, {x: 0, depth: 0, aim: 0}, input);
 
-  console.log(res.x * res.depth);
-});
-
+  return res.x * res.depth;
+};
