@@ -15,6 +15,12 @@ readInterface.on('line', line => {
 });
 
 readInterface.on('close', () => {
-  console.log(require(`${process.cwd()}/calc.js`)(input));
+  const res = require(`${process.cwd()}/calc.js`)(input);
+
+  if (res && res.constructor === Promise) {
+    res.then(console.log).catch(console.error);
+  } else {
+    console.log(res);
+  }
 });
 
