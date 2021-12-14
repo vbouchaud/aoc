@@ -1,8 +1,4 @@
 const {
-  Worker, isMainThread, parentPort, workerData
-} = require('worker_threads');
-
-const {
   compose,
   split,
   reduce,
@@ -12,6 +8,7 @@ const {
   head,
   map,
   length,
+  flatten,
 } = require('ramda');
 
 const it = acc => {
@@ -28,4 +25,15 @@ const it = acc => {
   return res;
 };
 
-module.exports = compose(length, reduce(it, __, times(identity, 80)), map(Number), split(','), head);
+const precalc = reduce(it, __, times(identity, 80));
+
+module.exports = input => {
+  const res = {};
+  for (let i = 0 ; i <= 8; i++) {
+    res[i] = precalc([i]);
+  }
+
+  const calc = compose(length, flatten, reduce((acc, n) => [ ...acc, res[n]], []), map(Number), split(','), head);
+
+  return calc(input);
+};
