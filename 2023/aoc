@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const readline = require('readline');
+const fs = require('fs');
+
+const { compose, reduce, split, values } = require('ramda');
+
+const readInterface = readline.createInterface({
+  input: fs.createReadStream('../input.txt'),
+});
+
+const input = [];
+readInterface.on('line', line => {
+  input.push(line);
+});
+
+readInterface.on('close', () => {
+  const res = require(`${process.cwd()}/calc.js`)(input);
+
+  if (res && res.constructor === Promise) {
+    res.then(console.log).catch(console.error);
+  } else {
+    console.log(res);
+  }
+});
+
